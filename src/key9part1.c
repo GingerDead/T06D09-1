@@ -5,11 +5,12 @@
 -------------------------------------*/
 
 #include <stdio.h>
+#define NMAX 10
 
-void input (int *buffer, int *length);
+int input (int *buffer, int *length);
 void output (int *buffer, int length);
 int sum_numbers(int *buffer, int length);
-int find_numbers(int* buffer, int length, int number, int* numbers)
+int find_numbers(int* buffer, int length, int number, int* numbers);
 
 /*------------------------------------
 	Функция получает массив данных 
@@ -20,9 +21,19 @@ int find_numbers(int* buffer, int length, int number, int* numbers)
 	(выбранных с помощью найденной суммы):
 	это и будет частью ключа
 -------------------------------------*/
-int main()
+int main() 
 {
-    
+    int length, buffer[NMAX], numbers[NMAX];
+	if (input(buffer, &length)) {
+		int number = sum_numbers(buffer, length);
+		if (number != 0) {
+			int finder = find_numbers(buffer, length, number, numbers);
+			printf("%d\n", number);
+			output(numbers, finder);
+		} else printf("n/a");
+	} else printf("n/a");
+
+	return 0; 
 }
 
 /*------------------------------------
@@ -30,16 +41,11 @@ int main()
 	сумму четных элементов 
 	с 0-й позиции.
 -------------------------------------*/
-int sum_numbers(int *buffer, int length)
-{
+int sum_numbers(int *buffer, int length) {
 	int sum = 0;
-	
-	for (int i = 1; i < length; i++)
-	{
-		if (i % 2 != 0)
-		{
-			sum = sum + buffer[i];
-		}
+	for (int i = 0; i < length; i++) {
+		if ((buffer[i] % 2) == 0)
+			sum += buffer[i];
 	}
 	
 	return sum;
@@ -53,5 +59,37 @@ int sum_numbers(int *buffer, int length)
 -------------------------------------*/
 int find_numbers(int* buffer, int length, int number, int* numbers)
 {
+	int finder = 0;
+	for (int i = 0; i < length; i++) {
+		if (buffer[i] == 0) {
+			continue;
+		} else {
+			if (number % buffer[i] == 0) {
+			numbers[finder] = buffer[i];
+			finder++;
+			}
+		}
+	}
 
+	return finder;
+}
+
+int input (int *buffer, int *length) {
+	int flag = 1;
+	if ((scanf("%d", length) == 1) && (*length > 0) && (*length <= NMAX) && (getc(stdin) == '\n')) {
+		for (int i = 0; i < *length; i++) {
+			if (scanf("%d", &buffer[i]) != 1) {
+				flag = 0;
+				break;
+			}
+		}
+	} else flag = 0;
+
+	return flag;
+}
+
+void output (int *buffer, int length) {
+	for (int i = 0; i < length; i++) {
+		(i != length - 1) ? printf("%d ", buffer[i]) : printf("%d", buffer[i]);
+	}
 }
