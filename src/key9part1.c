@@ -83,6 +83,7 @@ int input (int *buffer, int *length) {
 				break;
 			}
 		}
+		if (getc(stdin) != '\n') flag = 0;
 	} else flag = 0;
 
 	return flag;
